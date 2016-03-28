@@ -1,0 +1,50 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <PreferenceCategory android:title="@string/pref_category_rates">
+        <ListPreference
+            android:entries="@array/pref_list_providers"
+            android:entryValues="@array/pref_list_providers"
+            android:icon="@android:drawable/ic_input_get"
+            android:key="@string/pref_key_bitcoin_provider"
+            android:title="@string/pref_title_provider" />
+
+        <ListPreference
+            android:dependency="@string/pref_key_bitcoin_provider"
+            android:entries="@array/pref_list_currency"
+            android:entryValues="@array/pref_list_currency"
+            android:icon="@android:drawable/ic_menu_sort_alphabetically"
+            android:key="@string/pref_key_currency"
+            android:title="@string/pref_title_currency" />
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="@string/pref_category_app">
+        <ListPreference
+            android:entries="@array/pref_list_main_screen"
+            android:entryValues="@array/pref_list_main_screen"
+            android:icon="@android:drawable/picture_frame"
+            android:key="@string/pref_key_main_screen"
+            android:title="@string/pref_title_main_screen" />
+
+        <PreferenceScreen
+            android:icon="@android:drawable/ic_menu_info_details"
+            android:title="@string/pref_title_about">
+            <Preference android:title="@string/pref_made_by">
+                <intent
+                    android:action="android.intent.action.VIEW"
+                    android:data="@string/pref_made_by_url" />
+            </Preference>
+            <Preference
+                android:summary="@string/pref_donate_summary"
+                android:title="@string/pref_donate">
+                <intent
+                    android:action="android.intent.action.VIEW"
+                    android:data="@string/pref_donate_url" />
+            </Preference>
+            <mobi.bitcoinnow.VersionPreference android:title="@string/pref_version" />
+        </PreferenceScreen>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
