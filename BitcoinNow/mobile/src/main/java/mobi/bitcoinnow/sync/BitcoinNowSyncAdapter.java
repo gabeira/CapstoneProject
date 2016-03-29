@@ -377,7 +377,7 @@ public class BitcoinNowSyncAdapter extends AbstractThreadedSyncAdapter implement
 
         Cursor cursor = context.getContentResolver().query(tickerUri, null, null, null, null);
         if (cursor.moveToFirst()) {
-            String selectedProvider = PreferenceManager.getDefaultSharedPreferences(context).getString(getContext().getString(R.string.pref_key_bitcoin_provider), context.getString(R.string.pref_title_provider_mercado));
+            String selectedProvider = PreferenceManager.getDefaultSharedPreferences(context).getString(getContext().getString(R.string.pref_key_bitcoin_provider), "");
             double last = cursor.getDouble(INDEX_TICKER_LAST);
 
             Log.d(LOG_TAG, "SENDING TICKER DATA ");

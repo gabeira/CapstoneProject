@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="@dimen/widget_margin">
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:background="@color/primary_dark"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/abc_action_bar_progress_bar_size"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginTop="@dimen/widget_margin"
+                android:contentDescription="@string/app_name"
+                android:src="@mipmap/ic_launcher" />
+
+            <TextView
+                android:id="@+id/widget_last"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/cardview_default_elevation"
+                android:fontFamily="sans-serif-condensed"
+                android:gravity="center"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:textColor="@color/accent"
+                android:textStyle="bold"
+                tools:text="1800,00" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/widget_provider"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:text="Mercado Bitcoin"
+                android:textColor="@color/accent"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/widget_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@color/accent"
+                android:textSize="10sp"
+                tools:text="29/03/2016 " />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

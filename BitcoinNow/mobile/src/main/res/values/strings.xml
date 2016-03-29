@@ -81,5 +81,7 @@
 
     <string name="pref_server_status_key" translatable="false">server-status</string>
 
+    <string name="widget_bitcoin_now">Bitcoin Now Widget</string>
+
 
 </resources>

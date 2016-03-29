@@ -69,6 +69,21 @@
                 android:resource="@xml/syncadapter" />
         </service>
 
+        <!-- Widget -->
+        <receiver
+            android:name=".widget.BitcoinNowWidgetProvider"
+            android:label="@string/widget_bitcoin_now">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="mobi.bitcoinnow.ACTION_DATA_UPDATED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_bitcoin_now" />
+        </receiver>
+
+        <service android:name=".widget.BitcoinNowWidgetIntentService" />
 
     </application>
 

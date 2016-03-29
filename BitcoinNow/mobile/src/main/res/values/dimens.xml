@@ -4,4 +4,12 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="exchange_rates_height">64dp</dimen>
+
+    <!-- Widget -->
+    <dimen name="widget_margin">4dp</dimen>
+    <dimen name="widget_default_width">120dp</dimen>
+    <dimen name="widget_default_height">40dp</dimen>
+    <dimen name="widget_min_resize_width">100dp</dimen>
+    <dimen name="widget_min_resize_height">@dimen/widget_default_height</dimen>
+
 </resources>

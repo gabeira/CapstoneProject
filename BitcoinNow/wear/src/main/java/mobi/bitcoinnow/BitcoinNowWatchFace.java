@@ -32,10 +32,24 @@ import android.os.Message;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.WindowInsets;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.wearable.DataApi;
+import com.google.android.gms.wearable.DataEvent;
+import com.google.android.gms.wearable.DataEventBuffer;
+import com.google.android.gms.wearable.DataItem;
+import com.google.android.gms.wearable.DataMap;
+import com.google.android.gms.wearable.DataMapItem;
+import com.google.android.gms.wearable.Wearable;
+
 import java.lang.ref.WeakReference;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -44,6 +58,8 @@ import java.util.concurrent.TimeUnit;
  * low-bit ambient mode, the text is drawn without anti-aliasing in ambient mode.
  */
 public class BitcoinNowWatchFace extends CanvasWatchFaceService {
+    private static final String TAG = "BitcoinNowWatchFace";
+
     private static final Typeface NORMAL_TYPEFACE =
             Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
 
@@ -83,11 +99,25 @@ public class BitcoinNowWatchFace extends CanvasWatchFaceService {
         }
     }
 
-    private class Engine extends CanvasWatchFaceService.Engine {
+    private class Engine
+            extends CanvasWatchFaceService.Engine
+            implements DataApi.DataListener,
+            GoogleApiClient.ConnectionCallbacks,
+            GoogleApiClient.OnConnectionFailedListener {
+
+        private static final String WATCH_FACE_LAST_KEY = "mobi.bitcoinnow.key.last";
+        private static final String WATCH_FACE_PROVIDER_KEY = "mobi.bitcoinnow.key.provider";
+
+        private double last;
+        private String provider = "";
+
         final Handler mUpdateTimeHandler = new EngineHandler(this);
         boolean mRegisteredTimeZoneReceiver = false;
         Paint mBackgroundPaint;
         Paint mTextPaint;
+        Paint mMediumPaint;
+        Paint mMediumPaintLite;
+        Paint mSmallPaint;
         boolean mAmbient;
         Time mTime;
         final BroadcastReceiver mTimeZoneReceiver = new BroadcastReceiver() {
@@ -99,14 +129,25 @@ public class BitcoinNowWatchFace extends CanvasWatchFaceService {
         };
         int mTapCount;
 
-        float mXOffset;
-        float mYOffset;
+        float mXOffsetStart;
+        float mXOffsetMiddle;
+
+        float mYOffsetTime;
+        float mYOffsetDate;
+        float mYOffsetRate;
+        float mYOffsetProv;
 
         /**
          * Whether the display supports fewer bits for each color in ambient mode. When true, we
          * disable anti-aliasing in ambient mode.
          */
         boolean mLowBitAmbient;
+
+        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(BitcoinNowWatchFace.this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(Wearable.API)
+                .build();
 
         @Override
         public void onCreate(SurfaceHolder holder) {
@@ -119,13 +160,25 @@ public class BitcoinNowWatchFace extends CanvasWatchFaceService {
                     .setAcceptsTapEvents(true)
                     .build());
             Resources resources = BitcoinNowWatchFace.this.getResources();
-            mYOffset = resources.getDimension(R.dimen.digital_y_offset);
+            mYOffsetTime = resources.getDimension(R.dimen.time_y_offset);
+            mYOffsetDate = resources.getDimension(R.dimen.date_y_offset);
+            mYOffsetRate = resources.getDimension(R.dimen.rate_y_offset);
+            mYOffsetProv = resources.getDimension(R.dimen.prov_y_offset);
 
             mBackgroundPaint = new Paint();
             mBackgroundPaint.setColor(resources.getColor(R.color.background));
 
             mTextPaint = new Paint();
             mTextPaint = createTextPaint(resources.getColor(R.color.digital_text));
+
+            mMediumPaint = new Paint();
+            mMediumPaint = createTextPaint(resources.getColor(R.color.digital_text));
+
+            mMediumPaintLite = new Paint();
+            mMediumPaintLite = createTextPaint(resources.getColor(R.color.digital_text2));
+
+            mSmallPaint = new Paint();
+            mSmallPaint = createTextPaint(resources.getColor(R.color.digital_text2));
 
             mTime = new Time();
         }
@@ -149,6 +202,8 @@ public class BitcoinNowWatchFace extends CanvasWatchFaceService {
             super.onVisibilityChanged(visible);
 
             if (visible) {
+                mGoogleApiClient.connect();
+
                 registerReceiver();
 
                 // Update time zone in case it changed while we weren't visible.
@@ -156,6 +211,11 @@ public class BitcoinNowWatchFace extends CanvasWatchFaceService {
                 mTime.setToNow();
             } else {
                 unregisterReceiver();
+
+                if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+                    Wearable.DataApi.removeListener(mGoogleApiClient, this);
+                    mGoogleApiClient.disconnect();
+                }
             }
 
             // Whether the timer should be running depends on whether we're visible (as well as
@@ -187,12 +247,22 @@ public class BitcoinNowWatchFace extends CanvasWatchFaceService {
             // Load resources that have alternate values for round watches.
             Resources resources = BitcoinNowWatchFace.this.getResources();
             boolean isRound = insets.isRound();
-            mXOffset = resources.getDimension(isRound
-                    ? R.dimen.digital_x_offset_round : R.dimen.digital_x_offset);
+            mXOffsetStart = resources.getDimension(isRound
+                    ? R.dimen.start_x_offset_round : R.dimen.start_x_offset);
+            mXOffsetMiddle = resources.getDimension(isRound
+                    ? R.dimen.middle_x_offset_round : R.dimen.middle_x_offset);
+
             float textSize = resources.getDimension(isRound
                     ? R.dimen.digital_text_size_round : R.dimen.digital_text_size);
+            float mediumSize = resources.getDimension(isRound
+                    ? R.dimen.medium_text_size_round : R.dimen.medium_text_size);
+            float smallSize = resources.getDimension(isRound
+                    ? R.dimen.small_text_size_round : R.dimen.small_text_size);
 
             mTextPaint.setTextSize(textSize);
+            mMediumPaint.setTextSize(mediumSize);
+            mMediumPaintLite.setTextSize(mediumSize);
+            mSmallPaint.setTextSize(smallSize);
         }
 
         @Override
@@ -256,12 +326,27 @@ public class BitcoinNowWatchFace extends CanvasWatchFaceService {
                 canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
             }
 
-            // Draw H:MM in ambient mode or H:MM:SS in interactive mode.
             mTime.setToNow();
             String text = mAmbient
-                    ? String.format("%d:%02d", mTime.hour, mTime.minute)
-                    : String.format("%d:%02d:%02d", mTime.hour, mTime.minute, mTime.second);
-            canvas.drawText(text, mXOffset, mYOffset, mTextPaint);
+                    ? String.format("%02d:%02d:00", mTime.hour, mTime.minute)
+                    : String.format("%02d:%02d:%02d", mTime.hour, mTime.minute, mTime.second);
+
+            SimpleDateFormat monthDayFormat = new SimpleDateFormat("EEE, MMM dd yyyy", Locale.getDefault());
+            String monthDayString = monthDayFormat.format(mTime.toMillis(false));
+
+            canvas.drawText(text, mXOffsetStart, mYOffsetTime, mTextPaint);
+            canvas.drawText(monthDayString, mXOffsetStart, mYOffsetDate, mMediumPaintLite);
+
+            if (last > 0) {
+                NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+                canvas.drawText(currencyFormat.format(last), mXOffsetMiddle, mYOffsetRate, mMediumPaint);
+            }
+            if (null != provider && !provider.isEmpty()) {
+                if (provider.length() < 12)
+                    canvas.drawText("   " + provider, mXOffsetMiddle, mYOffsetProv, mSmallPaint);
+                else
+                    canvas.drawText("       " + provider, mXOffsetStart, mYOffsetProv, mSmallPaint);
+            }
         }
 
         /**
@@ -293,6 +378,49 @@ public class BitcoinNowWatchFace extends CanvasWatchFaceService {
                 long delayMs = INTERACTIVE_UPDATE_RATE_MS
                         - (timeMs % INTERACTIVE_UPDATE_RATE_MS);
                 mUpdateTimeHandler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, delayMs);
+            }
+        }
+
+        @Override  // GoogleApiClient.ConnectionCallbacks
+        public void onConnected(Bundle connectionHint) {
+            if (Log.isLoggable(TAG, Log.DEBUG)) {
+                Log.d(TAG, "onConnected: " + connectionHint);
+            }
+            Wearable.DataApi.addListener(mGoogleApiClient, Engine.this);
+        }
+
+        @Override  // GoogleApiClient.ConnectionCallbacks
+        public void onConnectionSuspended(int cause) {
+            if (Log.isLoggable(TAG, Log.DEBUG)) {
+                Log.d(TAG, "onConnectionSuspended: " + cause);
+            }
+        }
+
+        @Override  // GoogleApiClient.OnConnectionFailedListener
+        public void onConnectionFailed(ConnectionResult result) {
+            if (Log.isLoggable(TAG, Log.DEBUG)) {
+                Log.d(TAG, "onConnectionFailed: " + result);
+            }
+        }
+
+        @Override // DataApi.DataListener
+        public void onDataChanged(DataEventBuffer dataEvents) {
+            for (DataEvent dataEvent : dataEvents) {
+                if (dataEvent.getType() != DataEvent.TYPE_CHANGED) {
+                    continue;
+                }
+
+                DataItem dataItem = dataEvent.getDataItem();
+
+                String PATH_WITH_FEATURE = "/watch_face_config/Digital";
+                if (dataItem.getUri().getPath().equals(PATH_WITH_FEATURE)) {
+                    DataMap dataMap = DataMapItem.fromDataItem(dataItem).getDataMap();
+                    last = dataMap.getDouble(WATCH_FACE_LAST_KEY);
+                    provider = dataMap.getString(WATCH_FACE_PROVIDER_KEY);
+                    if (last > 0) {
+                        invalidate();
+                    }
+                }
             }
         }
     }
