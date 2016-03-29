@@ -1,12 +1,25 @@
 package mobi.bitcoinnow;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+
+import mobi.bitcoinnow.data.TickerContract;
+import mobi.bitcoinnow.sync.BitcoinNowSyncAdapter;
 
 
 /**
@@ -17,7 +30,8 @@ import android.view.ViewGroup;
  * Use the {@link NewsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewsFragment extends Fragment {
+public class NewsFragment extends Fragment implements
+        LoaderManager.LoaderCallbacks<Cursor> {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -26,6 +40,10 @@ public class NewsFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private static final int FORECAST_LOADER = 0;
+
+    TextView lastRate, dateRate;
 
     private OnNewsFragmentInteractionListener mListener;
 
@@ -64,7 +82,12 @@ public class NewsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_news, container, false);
+        View view = inflater.inflate(R.layout.fragment_news, container, false);
+
+        lastRate = (TextView) view.findViewById(R.id.last_rate);
+        dateRate = (TextView) view.findViewById(R.id.date_rate);
+        lastRate.setText("");
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -77,6 +100,8 @@ public class NewsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        getLoaderManager().initLoader(FORECAST_LOADER, null, this);
+
         if (context instanceof OnNewsFragmentInteractionListener) {
             mListener = (OnNewsFragmentInteractionListener) context;
         } else {
@@ -89,6 +114,33 @@ public class NewsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Uri weatherForLocationUri = TickerContract.TickerEntry.getTickerUri();
+        return new CursorLoader(this.getActivity(),
+                weatherForLocationUri,
+                null,
+                null,
+                null,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (data.getCount() > 0) {
+            DecimalFormat df = new DecimalFormat("#.00");
+            data.moveToFirst();
+            lastRate.setText(PreferenceManager.getDefaultSharedPreferences(getContext()).getString(getString(R.string.pref_key_currency), "-")+" $ " + df.format(data.getDouble(BitcoinNowSyncAdapter.INDEX_TICKER_LAST)));
+            dateRate.setText(SimpleDateFormat.getDateTimeInstance().format(data.getInt(BitcoinNowSyncAdapter.INDEX_TICKER_DATE) * 1000L));
+        }
+    }
+
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
     }
 
     /**

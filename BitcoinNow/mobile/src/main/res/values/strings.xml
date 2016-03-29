@@ -10,17 +10,36 @@
 
     <string name="pref_key_bitcoin_provider" translatable="false">provider</string>
     <string name="pref_title_provider">Provider</string>
-    <string-array name="pref_list_providers">
-        <item>Mercado Bitcoin</item>
-        <item>Blockchain</item>
+    <string name="pref_title_provider_mercado">Mercado Bitcoin</string>
+    <string name="pref_title_provider_blockchain">Blockchain</string>
+    <string-array name="pref_list_providers" translatable="false">
+        <item>@string/pref_title_provider_mercado</item>
+        <item>@string/pref_title_provider_blockchain</item>
     </string-array>
 
     <string name="pref_key_currency" translatable="false">currency</string>
     <string name="pref_title_currency">Currency</string>
-    <string-array name="pref_list_currency">
-        <item>AUD</item>
-        <item>BRL</item>
+    <string-array name="pref_list_currency" translatable="false">
         <item>USD</item>
+        <item>ISK</item>
+        <item>TWD</item>
+        <item>CHF</item>
+        <item>EUR</item>
+        <item>DKK</item>
+        <item>CLP</item>
+        <item>CAD</item>
+        <item>CNY</item>
+        <item>THB</item>
+        <item>AUD</item>
+        <item>SGD</item>
+        <item>KRW</item>
+        <item>JPY</item>
+        <item>PLN</item>
+        <item>GBP</item>
+        <item>SEK</item>
+        <item>NZD</item>
+        <item>BRL</item>
+        <item>RUB</item>
     </string-array>
 
     <string name="pref_category_app">Application</string>
@@ -32,6 +51,19 @@
         <item>@string/title_news</item>
     </string-array>
 
+    <string name="pref_key_sync" translatable="false">resync</string>
+    <string name="pref_title_sync">Sync Interval (minutes)</string>
+    <string name="pref_default_sync" translatable="false">60</string>
+    <string-array name="pref_list_sync" translatable="false">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
+    </string-array>
+
     <string name="pref_title_about">About</string>
     <string name="pref_version">Version</string>
     <string name="pref_donate">Donate</string>
@@ -41,5 +73,13 @@
     <string name="pref_made_by_url">https://www.linkedin.com/in/gabeira</string>
 
     <string name="google_app_id">put here</string>
+
+    <!-- Account type (for sync-adapter authenticator) -->
+    <!-- SyncAdapter related -->
+    <string name="sync_account_type" translatable="false">bitcoinnow.mobi</string>
+    <string name="content_authority" translatable="false">mobi.android.bitcoinnow</string>
+
+    <string name="pref_server_status_key" translatable="false">server-status</string>
+
 
 </resources>

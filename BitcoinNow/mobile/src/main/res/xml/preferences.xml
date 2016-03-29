@@ -3,6 +3,14 @@
 
     <PreferenceCategory android:title="@string/pref_category_rates">
         <ListPreference
+            android:defaultValue="@string/pref_default_sync"
+            android:entries="@array/pref_list_sync"
+            android:entryValues="@array/pref_list_sync"
+            android:icon="@android:drawable/ic_menu_recent_history"
+            android:key="@string/pref_key_sync"
+            android:title="@string/pref_title_sync" />
+
+        <ListPreference
             android:entries="@array/pref_list_providers"
             android:entryValues="@array/pref_list_providers"
             android:icon="@android:drawable/ic_input_get"

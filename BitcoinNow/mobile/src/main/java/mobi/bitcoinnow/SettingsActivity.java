@@ -13,11 +13,14 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+
+import mobi.bitcoinnow.sync.BitcoinNowSyncAdapter;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings.
@@ -110,9 +113,16 @@ public class SettingsActivity extends PreferenceActivity
     // start our synchronization here
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(R.string.pref_key_bitcoin_provider)) || key.equals(getString(R.string.pref_key_currency))) {
-            //TODO update Bitcoin Adapter
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        if ((key.equals(getString(R.string.pref_key_bitcoin_provider)) || key.equals(getString(R.string.pref_key_currency))) &&
+                sp.getString(getString(R.string.pref_key_bitcoin_provider), "").equals(getString(R.string.pref_title_provider_mercado))) {
+
+            // For Mercado Bitcoin it just use BRL
+            SharedPreferences.Editor spe = sp.edit();
+            spe.putString(getString(R.string.pref_key_currency), "BRL");
+            spe.commit();
         }
+        BitcoinNowSyncAdapter.syncImmediately(this);
     }
 
     /**

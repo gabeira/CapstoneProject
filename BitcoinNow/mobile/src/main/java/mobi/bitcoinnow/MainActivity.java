@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import mobi.bitcoinnow.sync.BitcoinNowSyncAdapter;
+
 public class MainActivity
         extends AppCompatActivity
         implements CoinMapFragment.OnCoinMapFragmentInteractionListener,
@@ -22,7 +24,7 @@ public class MainActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        getSupportActionBar().setElevation(0f);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (sharedPreferences.getString(getString(R.string.pref_key_main_screen), "").equals(getString(R.string.title_maps))) {
@@ -34,6 +36,7 @@ public class MainActivity
                 .add(R.id.container, mainScreenFragment)
                 .commit();
 
+        BitcoinNowSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override
@@ -57,6 +60,7 @@ public class MainActivity
                     .commit();
             return true;
         } else if (id == R.id.action_news) {
+            BitcoinNowSyncAdapter.syncImmediately(this);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, new NewsFragment())
                     .commit();
