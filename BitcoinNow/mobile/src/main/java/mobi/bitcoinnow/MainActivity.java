@@ -7,15 +7,19 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import java.util.Date;
 
 import mobi.bitcoinnow.sync.BitcoinNowSyncAdapter;
+import mobi.bitcoinnow.sync.CoinMapIntentService;
 
 public class MainActivity
         extends AppCompatActivity
-        implements CoinMapFragment.OnCoinMapFragmentInteractionListener,
-        NewsFragment.OnNewsFragmentInteractionListener {
+        implements NewsFragment.OnNewsFragmentInteractionListener {
 
     Fragment mainScreenFragment;
 
@@ -28,7 +32,7 @@ public class MainActivity
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (sharedPreferences.getString(getString(R.string.pref_key_main_screen), "").equals(getString(R.string.title_maps))) {
-            mainScreenFragment = new CoinMapFragment();
+            mainScreenFragment = CoinMapFragment.newInstance();
         } else {
             mainScreenFragment = new NewsFragment();
         }
@@ -36,7 +40,17 @@ public class MainActivity
                 .add(R.id.container, mainScreenFragment)
                 .commit();
 
-        BitcoinNowSyncAdapter.initializeSyncAdapter(this);
+        try {
+            BitcoinNowSyncAdapter.initializeSyncAdapter(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        if (sp.getString(getString(R.string.pref_key_update_map), "").isEmpty()) {
+            CoinMapIntentService.startActionUpdateVenues(getApplicationContext());
+            Toast.makeText(this, (getString(R.string.pref_update_map_request) + " " + DateFormat.format("d MMM HH:mm", new Date())), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override

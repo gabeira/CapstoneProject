@@ -13,14 +13,17 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.util.Log;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import java.util.Date;
+
 import mobi.bitcoinnow.sync.BitcoinNowSyncAdapter;
+import mobi.bitcoinnow.sync.CoinMapIntentService;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings.
@@ -45,7 +48,8 @@ public class SettingsActivity extends PreferenceActivity
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_bitcoin_provider)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_currency)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_main_screen)));
-
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_sync)));
+        bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_update_map)));
     }
 
     /**
@@ -135,6 +139,18 @@ public class SettingsActivity extends PreferenceActivity
     @Override
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
         super.onPreferenceTreeClick(preferenceScreen, preference);
+
+        if (null != preference.getKey() && preference.getKey().equals(getString(R.string.pref_key_update_map))) {
+
+            CoinMapIntentService.startActionUpdateVenues(getApplicationContext());
+
+            String summary = (getString(R.string.pref_update_map_request) + " " + DateFormat.format("d MMM HH:mm", new Date()));
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor spe = sp.edit();
+            spe.putString(getString(R.string.pref_key_update_map), summary);
+            spe.commit();
+            preference.setSummary(summary);
+        }
 
         if (null != preference && preference instanceof PreferenceScreen && ((PreferenceScreen) preference).getDialog() != null) {
             final Dialog dialog = ((PreferenceScreen) preference).getDialog();

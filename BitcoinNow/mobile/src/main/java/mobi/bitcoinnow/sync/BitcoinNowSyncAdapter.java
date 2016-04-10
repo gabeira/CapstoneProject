@@ -278,7 +278,15 @@ public class BitcoinNowSyncAdapter extends AbstractThreadedSyncAdapter implement
     /**
      * Helper method to schedule the sync adapter periodic execution
      */
-    public static void configurePeriodicSync(Context context, int syncInterval, int flexTime) {
+    public static void configurePeriodicSync(Context context) {
+        int selectedSyncInterval = Integer.valueOf(
+                PreferenceManager.getDefaultSharedPreferences(context)
+                        .getString(context.getString(R.string.pref_key_sync), "30"));
+//         Interval at which to sync with the ticker, in milliseconds.
+//         60 seconds (1 minute) * 60 = 1 hours
+        int syncInterval = 60 * selectedSyncInterval;
+        int flexTime = syncInterval / 3;
+
         Account account = getSyncAccount(context);
         String authority = context.getString(R.string.content_authority);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -348,12 +356,7 @@ public class BitcoinNowSyncAdapter extends AbstractThreadedSyncAdapter implement
         /*
          * Since we've created an account
          */
-        int selectedSyncInterval = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.pref_key_sync), "60"));
-//         Interval at which to sync with the ticker, in milliseconds.
-//         60 seconds (1 minute) * 60 = 1 hours
-        int SYNC_INTERVAL = 60 * selectedSyncInterval;
-        int SYNC_FLEXTIME = SYNC_INTERVAL / 3;
-        BitcoinNowSyncAdapter.configurePeriodicSync(context, SYNC_INTERVAL, SYNC_FLEXTIME);
+        configurePeriodicSync(context);
 
         /*
          * Without calling setSyncAutomatically, our periodic sync will not be enabled.
@@ -368,6 +371,7 @@ public class BitcoinNowSyncAdapter extends AbstractThreadedSyncAdapter implement
 
     public static void initializeSyncAdapter(Context context) {
         getSyncAccount(context);
+        configurePeriodicSync(context);
     }
 
 

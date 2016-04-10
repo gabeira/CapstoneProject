@@ -5,12 +5,13 @@
         <ListPreference
             android:defaultValue="@string/pref_default_sync"
             android:entries="@array/pref_list_sync"
-            android:entryValues="@array/pref_list_sync"
+            android:entryValues="@array/pref_list_sync_values"
             android:icon="@android:drawable/ic_menu_recent_history"
             android:key="@string/pref_key_sync"
             android:title="@string/pref_title_sync" />
 
         <ListPreference
+            android:defaultValue="@string/pref_default_provider"
             android:entries="@array/pref_list_providers"
             android:entryValues="@array/pref_list_providers"
             android:icon="@android:drawable/ic_input_get"
@@ -18,6 +19,7 @@
             android:title="@string/pref_title_provider" />
 
         <ListPreference
+            android:defaultValue="@string/pref_default_currency"
             android:dependency="@string/pref_key_bitcoin_provider"
             android:entries="@array/pref_list_currency"
             android:entryValues="@array/pref_list_currency"
@@ -28,10 +30,17 @@
 
 
     <PreferenceCategory android:title="@string/pref_category_app">
+
+        <Preference
+            android:icon="@android:drawable/ic_menu_mapmode"
+            android:key="@string/pref_key_update_map"
+            android:title="@string/pref_update_map" />
+
         <ListPreference
+            android:defaultValue="@string/pref_default_main_screen"
             android:entries="@array/pref_list_main_screen"
             android:entryValues="@array/pref_list_main_screen"
-            android:icon="@android:drawable/picture_frame"
+            android:icon="@android:drawable/ic_menu_view"
             android:key="@string/pref_key_main_screen"
             android:title="@string/pref_title_main_screen" />
 

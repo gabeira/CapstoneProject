@@ -12,6 +12,7 @@
     <string name="pref_title_provider">Provider</string>
     <string name="pref_title_provider_mercado">Mercado Bitcoin</string>
     <string name="pref_title_provider_blockchain">Blockchain</string>
+    <string name="pref_default_provider" translatable="false">@string/pref_title_provider_mercado</string>
     <string-array name="pref_list_providers" translatable="false">
         <item>@string/pref_title_provider_mercado</item>
         <item>@string/pref_title_provider_blockchain</item>
@@ -19,6 +20,7 @@
 
     <string name="pref_key_currency" translatable="false">currency</string>
     <string name="pref_title_currency">Currency</string>
+    <string name="pref_default_currency" translatable="false">BRL</string>
     <string-array name="pref_list_currency" translatable="false">
         <item>USD</item>
         <item>ISK</item>
@@ -46,15 +48,25 @@
 
     <string name="pref_key_main_screen" translatable="false">screen</string>
     <string name="pref_title_main_screen">Main Screen</string>
+    <string name="pref_default_main_screen" translatable="false">@string/title_news</string>
     <string-array name="pref_list_main_screen" translatable="false">
         <item>@string/title_maps</item>
         <item>@string/title_news</item>
     </string-array>
 
     <string name="pref_key_sync" translatable="false">resync</string>
-    <string name="pref_title_sync">Sync Interval (minutes)</string>
-    <string name="pref_default_sync" translatable="false">60</string>
-    <string-array name="pref_list_sync" translatable="false">
+    <string name="pref_title_sync">Sync Interval</string>
+    <string name="pref_default_sync" translatable="false">30</string>
+    <string-array name="pref_list_sync">
+        <item>1 minute</item>
+        <item>5 minutes</item>
+        <item>10 minutes</item>
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>45 minutes</item>
+        <item>1 hour</item>
+    </string-array>
+    <string-array name="pref_list_sync_values" translatable="false">
         <item>1</item>
         <item>5</item>
         <item>10</item>
@@ -72,7 +84,12 @@
     <string name="pref_made_by">Made with ♥ by Gabriel Pereira</string>
     <string name="pref_made_by_url">https://www.linkedin.com/in/gabeira</string>
 
-    <string name="google_app_id">put here</string>
+    <string name="pref_key_update_map" translatable="false">update_map</string>
+    <string name="pref_update_map">Update Bitcoin Map Venues</string>
+    <string name="pref_update_map_request">Request update Map Venues on</string>
+    <string name="pref_update_map_last">Last update on <xliff:g id="time">%1$s</xliff:g> with <xliff:g id="num_venue">%2$s</xliff:g> venues</string>
+
+    <string name="google_app_id">AIzaSyABoDmB5YxERAFSph6o497I4Igs_IvyL6I</string>
 
     <!-- Account type (for sync-adapter authenticator) -->
     <!-- SyncAdapter related -->
