@@ -100,5 +100,9 @@
 
     <string name="widget_bitcoin_now">Bitcoin Now Widget</string>
 
+    <string name="action_share">Share</string>
+    <string name="hours_ago">hours ago</string>
+    <string name="by">by</string>
+    <string name="comments">comments</string>
 
 </resources>

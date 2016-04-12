@@ -1,12 +1,11 @@
 package mobi.bitcoinnow;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,8 +17,7 @@ import mobi.bitcoinnow.sync.BitcoinNowSyncAdapter;
 import mobi.bitcoinnow.sync.CoinMapIntentService;
 
 public class MainActivity
-        extends AppCompatActivity
-        implements NewsFragment.OnNewsFragmentInteractionListener {
+        extends AppCompatActivity {
 
     Fragment mainScreenFragment;
 
@@ -34,7 +32,7 @@ public class MainActivity
         if (sharedPreferences.getString(getString(R.string.pref_key_main_screen), "").equals(getString(R.string.title_maps))) {
             mainScreenFragment = CoinMapFragment.newInstance();
         } else {
-            mainScreenFragment = new NewsFragment();
+            mainScreenFragment = NewsFragment.newInstance();
         }
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.container, mainScreenFragment)
@@ -86,11 +84,5 @@ public class MainActivity
 
 
         return super.onOptionsItemSelected(item);
-    }
-
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 }

@@ -12,4 +12,8 @@
     <dimen name="widget_min_resize_width">100dp</dimen>
     <dimen name="widget_min_resize_height">@dimen/widget_default_height</dimen>
 
+    <dimen name="collapsing_toolbar_height">300dp</dimen>
+
+    <dimen name="fab_margin">16dp</dimen>
+
 </resources>
