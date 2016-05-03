@@ -20,7 +20,7 @@
 
     <string name="pref_key_currency" translatable="false">currency</string>
     <string name="pref_title_currency">Currency</string>
-    <string name="pref_default_currency" translatable="false">USD</string>
+    <string name="pref_default_currency" translatable="false">AUD</string>
     <string-array name="pref_list_currency" translatable="false">
         <item>USD</item>
         <item>ISK</item>

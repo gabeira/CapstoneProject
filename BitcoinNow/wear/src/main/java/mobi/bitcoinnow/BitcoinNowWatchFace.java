@@ -129,9 +129,6 @@ public class BitcoinNowWatchFace extends CanvasWatchFaceService {
         };
         int mTapCount;
 
-        float mXOffsetStart;
-        float mXOffsetMiddle;
-
         float mYOffsetTime;
         float mYOffsetDate;
         float mYOffsetRate;
@@ -247,10 +244,6 @@ public class BitcoinNowWatchFace extends CanvasWatchFaceService {
             // Load resources that have alternate values for round watches.
             Resources resources = BitcoinNowWatchFace.this.getResources();
             boolean isRound = insets.isRound();
-            mXOffsetStart = resources.getDimension(isRound
-                    ? R.dimen.start_x_offset_round : R.dimen.start_x_offset);
-            mXOffsetMiddle = resources.getDimension(isRound
-                    ? R.dimen.middle_x_offset_round : R.dimen.middle_x_offset);
 
             float textSize = resources.getDimension(isRound
                     ? R.dimen.digital_text_size_round : R.dimen.digital_text_size);
@@ -334,18 +327,15 @@ public class BitcoinNowWatchFace extends CanvasWatchFaceService {
             SimpleDateFormat monthDayFormat = new SimpleDateFormat("EEE, MMM dd yyyy", Locale.getDefault());
             String monthDayString = monthDayFormat.format(mTime.toMillis(false));
 
-            canvas.drawText(text, mXOffsetStart, mYOffsetTime, mTextPaint);
-            canvas.drawText(monthDayString, mXOffsetStart, mYOffsetDate, mMediumPaintLite);
+            canvas.drawText(text, bounds.centerX() - (mTextPaint.measureText(text)) / 2, mYOffsetTime, mTextPaint);
+            canvas.drawText(monthDayString, bounds.centerX() - (mMediumPaintLite.measureText(monthDayString)) / 2, mYOffsetDate, mMediumPaintLite);
 
             if (last > 0) {
                 NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
-                canvas.drawText(currencyFormat.format(last), mXOffsetMiddle, mYOffsetRate, mMediumPaint);
+                canvas.drawText(currencyFormat.format(last), bounds.centerX() - (mMediumPaint.measureText(currencyFormat.format(last))) / 2, mYOffsetRate, mMediumPaint);
             }
             if (null != provider && !provider.isEmpty()) {
-                if (provider.length() < 12)
-                    canvas.drawText("   " + provider, mXOffsetMiddle, mYOffsetProv, mSmallPaint);
-                else
-                    canvas.drawText("       " + provider, mXOffsetStart, mYOffsetProv, mSmallPaint);
+                canvas.drawText(provider, bounds.centerX() - (mSmallPaint.measureText(provider)) / 2, mYOffsetProv, mSmallPaint);
             }
         }
 

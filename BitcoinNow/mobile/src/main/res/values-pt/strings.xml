@@ -1,18 +1,18 @@
 <resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
 
-    <string name="app_name">Bitcoin Now</string>
-    <string name="title_maps">Coin Map</string>
-    <string name="title_news">News</string>
+    <string name="app_name">Bitcoin Agora</string>
+    <string name="title_maps">Mapa</string>
+    <string name="title_news">Notícias</string>
 
     <!-- Strings related to Settings -->
-    <string name="title_settings">Settings</string>
-    <string name="pref_category_rates">Exchange Rates</string>
+    <string name="title_settings">Configurações</string>
+    <string name="pref_category_rates">Cotação</string>
 
     <string name="pref_key_bitcoin_provider" translatable="false">provider</string>
-    <string name="pref_title_provider">Provider</string>
+    <string name="pref_title_provider">Provedor</string>
     <string name="pref_title_provider_mercado">Mercado Bitcoin</string>
     <string name="pref_title_provider_blockchain">Blockchain</string>
-    <string name="pref_default_provider" translatable="false">@string/pref_title_provider_blockchain</string>
+    <string name="pref_default_provider" translatable="false">@string/pref_title_provider_mercado</string>
     <string-array name="pref_list_providers" translatable="false">
         <item>@string/pref_title_provider_mercado</item>
         <item>@string/pref_title_provider_blockchain</item>
@@ -20,7 +20,7 @@
 
     <string name="pref_key_currency" translatable="false">currency</string>
     <string name="pref_title_currency">Currency</string>
-    <string name="pref_default_currency" translatable="false">USD</string>
+    <string name="pref_default_currency" translatable="false">BRL</string>
     <string-array name="pref_list_currency" translatable="false">
         <item>USD</item>
         <item>ISK</item>
@@ -44,10 +44,10 @@
         <item>RUB</item>
     </string-array>
 
-    <string name="pref_category_app">Application</string>
+    <string name="pref_category_app">Aplicativo</string>
 
     <string name="pref_key_main_screen" translatable="false">screen</string>
-    <string name="pref_title_main_screen">Main Screen</string>
+    <string name="pref_title_main_screen">Tela Principal</string>
     <string name="pref_default_main_screen" translatable="false">@string/title_news</string>
     <string-array name="pref_list_main_screen" translatable="false">
         <item>@string/title_maps</item>
@@ -55,16 +55,16 @@
     </string-array>
 
     <string name="pref_key_sync" translatable="false">resync</string>
-    <string name="pref_title_sync">Sync Interval</string>
+    <string name="pref_title_sync">Intervalo Sincronização</string>
     <string name="pref_default_sync" translatable="false">30</string>
     <string-array name="pref_list_sync">
-        <item>1 minute</item>
-        <item>5 minutes</item>
-        <item>10 minutes</item>
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>45 minutes</item>
-        <item>1 hour</item>
+        <item>1 minuto</item>
+        <item>5 minutos</item>
+        <item>10 minutos</item>
+        <item>15 minutos</item>
+        <item>30 minutos</item>
+        <item>45 minutos</item>
+        <item>1 hora</item>
     </string-array>
     <string-array name="pref_list_sync_values" translatable="false">
         <item>1</item>
@@ -76,18 +76,18 @@
         <item>60</item>
     </string-array>
 
-    <string name="pref_title_about">About</string>
-    <string name="pref_version">Version</string>
-    <string name="pref_donate">Donate</string>
-    <string name="pref_donate_summary">If you like this app, please donate to help this project.</string>
+    <string name="pref_title_about">Sobre</string>
+    <string name="pref_version">Versão</string>
+    <string name="pref_donate">Doação</string>
+    <string name="pref_donate_summary">Se você gostou da app, por favor faça uma doação para ajudar este projeto.</string>
     <string name="pref_donate_url">http://gabeira.tip.me</string>
-    <string name="pref_made_by">Made with ♥ by Gabriel Pereira</string>
+    <string name="pref_made_by">Feito com ♥ por Gabriel Pereira</string>
     <string name="pref_made_by_url">https://www.linkedin.com/in/gabeira</string>
 
     <string name="pref_key_update_map" translatable="false">update_map</string>
-    <string name="pref_update_map">Update Bitcoin Map Venues</string>
-    <string name="pref_update_map_request">Request update Map Venues on</string>
-    <string name="pref_update_map_last">Last update on <xliff:g id="time">%1$s</xliff:g> with <xliff:g id="num_venue">%2$s</xliff:g> venues</string>
+    <string name="pref_update_map">Atualizar Locais que aceitam Bitcoin</string>
+    <string name="pref_update_map_request">Locais atualizados em </string>
+    <string name="pref_update_map_last">Última atualização em <xliff:g id="time">%1$s</xliff:g> com <xliff:g id="num_venue">%2$s</xliff:g> locais</string>
 
     <string name="google_app_id">AIzaSyABoDmB5YxERAFSph6o497I4Igs_IvyL6I</string>
 
@@ -98,11 +98,11 @@
 
     <string name="pref_server_status_key" translatable="false">server-status</string>
 
-    <string name="widget_bitcoin_now">Bitcoin Now Widget</string>
+    <string name="widget_bitcoin_now">Bitcoin Agora Widget</string>
 
-    <string name="action_share">Share</string>
-    <string name="hours_ago">hours ago</string>
-    <string name="by">by</string>
-    <string name="comments">comments</string>
+    <string name="action_share">Compartilhe</string>
+    <string name="hours_ago">horas atrás</string>
+    <string name="by">por</string>
+    <string name="comments">comentários</string>
 
 </resources>
